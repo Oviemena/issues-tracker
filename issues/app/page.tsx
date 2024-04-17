@@ -1,7 +1,13 @@
-import Image from "next/image";
+import { Button } from "@radix-ui/themes";
+import { LoginButton } from "../components/auth/login-button";
 
 export default function Home() {
   return (
-    <div><h1>Hello,World</h1></div>
+    <div className="items-center justify-center space-y-4">
+      <h1>🔐Issues</h1>
+      <LoginButton mode="redirect">
+        <Button variant="soft">Sign in</Button>
+      </LoginButton>
+    </div>
   );
 }

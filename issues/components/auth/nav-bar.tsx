@@ -8,7 +8,7 @@ import classnames from 'classnames'
 const NavBar = () => {
   const currentpath = usePathname();
   const links = [
-    { label: "Dashboard", href: "/" },
+    { label: "Dashboard", href: "/pages/dashboard" },
     { label: "Issues", href: "/pages/issues" },
   ];
   return (
@@ -21,9 +21,9 @@ const NavBar = () => {
           <Link 
              key={link.href} 
              href={link.href} 
-             className={classnames({'text-zinc-900': link.href === currentpath,
-            'text-zinc-500': link.href !== currentpath,
-            'hover:text-zinc-800 transition-colors': true
+             className={classnames({'text-slate-400': link.href === currentpath,
+            'text-slate-700': link.href !== currentpath,
+            'hover:text-[whitesmoke] transition-colors': true
           })}>
             {link.label}
           </Link>
