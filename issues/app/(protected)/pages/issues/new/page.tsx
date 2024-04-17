@@ -6,7 +6,7 @@ import "easymde/dist/easymde.min.css";
 import { useForm, Controller } from "react-hook-form";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { startTransition, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { issueCreationSchema } from "@/app/validationSchema";
 import { z } from "zod";
@@ -15,14 +15,12 @@ import Spinner from "@/components/Spinner";
 
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import { createIssue } from "@/actions/issues";
-import { getUserByEmail, getUserById } from "@/data/user";
-
-import { auth } from "@/auth";
 
 type IssueForm = z.infer<typeof issueCreationSchema>;
 
 const NewIssuePage = () => {
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const router = useRouter();
 
@@ -35,26 +33,21 @@ const NewIssuePage = () => {
     resolver: zodResolver(issueCreationSchema),
   });
 
-  const submitForm = handleSubmit(async (data: IssueForm) => {
-    //   try {
-
-    //     await axios.post("/api/issues", data);
-    //     router.push("/pages/issues");
-    //   } catch (error) {
+  const submitForm = handleSubmit(async (values: IssueForm) => {
+    // createIssue(values)
+    //   .then(() => {
     //     setError("An Unexpected error occurred!");
-    //     console.log(error);
-    //   }
+    //     setSuccess("Isuue created!");
     // });
-
-    const session = await auth();
-    const userId = session?.user.id
+    setError("");
+    setSuccess("");
 
     try {
-      createIssue(userId, data);
+      await createIssue(values);
+      setSuccess("Issues created!");
       router.push("/pages/issues");
     } catch (error) {
-      setError("An Unexpected error occurred!");
-      console.log(error);
+      setError("An unexpected error occurred!");
     }
   });
 
@@ -65,7 +58,7 @@ const NewIssuePage = () => {
           <Callout.Text>
             <div className="flex gap-x-2  items-center text-sm">
               <ExclamationTriangleIcon />
-              {error}
+              {error ? error : success}
             </div>
           </Callout.Text>
         </Callout.Root>

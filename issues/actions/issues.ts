@@ -1,12 +1,12 @@
 'use server'
 
 import { issueCreationSchema } from "@/app/validationSchema"
-import { getUserById } from "@/data/user"
+import { auth } from "@/auth"
 import prisma from "@/prisma/client"
 import * as z from "zod"
 
-export const createIssue = async (id: string, data: z.infer<typeof issueCreationSchema>) => {
-    const validatedFields = issueCreationSchema.safeParse(data)
+export const createIssue = async ( values: z.infer<typeof issueCreationSchema>) => {
+    const validatedFields = issueCreationSchema.safeParse(values)
 
     if (!validatedFields.success) {
         return { error: "Invalid fields!" }
@@ -14,18 +14,22 @@ export const createIssue = async (id: string, data: z.infer<typeof issueCreation
 
     const { title, description } = validatedFields.data
 
-    const existingUser = await getUserById(id)
-    if (existingUser) {
+    const session = await auth()
+    const existingUserId = session?.user.id
+
+    if (existingUserId) {
         await prisma.issue.create({
             data: {
                 title,
                 description,
                 user: {
-                    connect: { id: existingUser.id}
+                    connect: { id: existingUserId}
                 }
 
             }
         })
     }
+
+    return { success: "Issue created!"}
 
 }
