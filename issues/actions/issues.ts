@@ -5,7 +5,7 @@ import { getUserById } from "@/data/user"
 import prisma from "@/prisma/client"
 import * as z from "zod"
 
-export const createIssue = async ( data: z.infer<typeof issueCreationSchema>) => {
+export const createIssue = async (id: string, data: z.infer<typeof issueCreationSchema>) => {
     const validatedFields = issueCreationSchema.safeParse(data)
 
     if (!validatedFields.success) {
@@ -13,11 +13,19 @@ export const createIssue = async ( data: z.infer<typeof issueCreationSchema>) =>
     }
 
     const { title, description } = validatedFields.data
-    await prisma.issue.create({
-        data: {
-            title,
-            description,
 
-        }
-    })
+    const existingUser = await getUserById(id)
+    if (existingUser) {
+        await prisma.issue.create({
+            data: {
+                title,
+                description,
+                user: {
+                    connect: { id: existingUser.id}
+                }
+
+            }
+        })
+    }
+
 }

@@ -15,7 +15,9 @@ import Spinner from "@/components/Spinner";
 
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import { createIssue } from "@/actions/issues";
-import { getUserById } from "@/data/user";
+import { getUserByEmail, getUserById } from "@/data/user";
+
+import { auth } from "@/auth";
 
 type IssueForm = z.infer<typeof issueCreationSchema>;
 
@@ -34,18 +36,27 @@ const NewIssuePage = () => {
   });
 
   const submitForm = handleSubmit(async (data: IssueForm) => {
-  //   try {
+    //   try {
 
-  //     await axios.post("/api/issues", data);
-  //     router.push("/pages/issues");
-  //   } catch (error) {
-  //     setError("An Unexpected error occurred!");
-  //     console.log(error);
-  //   }
-  // });
-    
+    //     await axios.post("/api/issues", data);
+    //     router.push("/pages/issues");
+    //   } catch (error) {
+    //     setError("An Unexpected error occurred!");
+    //     console.log(error);
+    //   }
+    // });
 
-  })
+    const session = await auth();
+    const userId = session?.user.id
+
+    try {
+      createIssue(userId, data);
+      router.push("/pages/issues");
+    } catch (error) {
+      setError("An Unexpected error occurred!");
+      console.log(error);
+    }
+  });
 
   return (
     <div className="max-w-xl">
