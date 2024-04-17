@@ -8,9 +8,10 @@ const poppins = Poppins({
 
 interface HeaderProps {
   label: string;
+  title: string
 }
 
-export const Header = ({ label }: HeaderProps) => {
+export const Header = ({ label, title }: HeaderProps) => {
   return (
     <div
       className={classnames(
@@ -18,7 +19,7 @@ export const Header = ({ label }: HeaderProps) => {
         poppins.className
       )}
     >
-      <h1 className="text-3xl font-semibold">Log in</h1>
+      <h1 className="text-3xl font-semibold">{title}</h1>
       <p>{label}</p>
     </div>
   );
