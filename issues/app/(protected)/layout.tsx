@@ -17,13 +17,15 @@ interface ProtectedLayoutProps {
   children: React.ReactNode;
 }
 
-export default async function ProtectedLayout({ children }: ProtectedLayoutProps) {
+export default async function ProtectedLayout({
+  children,
+}: ProtectedLayoutProps) {
   return (
-    
-      <div className={inter.variable}>
-        <NavBar />
-        <main className="p-5">{children}</main>
-      </div>
-    
+    <div
+      className={inter.variable}
+    >
+      <NavBar />
+      <main className="p-5">{children}</main>
+    </div>
   );
 }

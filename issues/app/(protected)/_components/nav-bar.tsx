@@ -9,13 +9,13 @@ import { UserButton } from "@/components/auth/user-button";
 const NavBar = () => {
   const currentpath = usePathname();
   const links = [
-    { label: "Dashboard", href: "../pages/dashboard" },
-    { label: "Issues", href: "../pages/issues" },
+    { label: "Dashboard", href: "/pages/dashboard" },
+    { label: "Issues", href: "/pages/issues" },
   ];
   return (
     <nav className="flex space-x-6 border-b mb-5 px-5 h-14 items-center justify-between">
-      <Link href="/">
-        <AiFillBug width="40px" color="brownish" />
+      <Link href="../pages/dashboard">
+        <AiFillBug width="40px" color="gold" />
       </Link>
       <div className="flex gap-x-2">
         <ul className="flex space-x-6 ">

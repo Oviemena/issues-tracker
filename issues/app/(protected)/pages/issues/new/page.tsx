@@ -4,7 +4,6 @@ import { TextField, Button, Callout } from "@radix-ui/themes";
 import SimpleMDE from "react-simplemde-editor";
 import "easymde/dist/easymde.min.css";
 import { useForm, Controller } from "react-hook-form";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import { startTransition, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -34,11 +33,6 @@ const NewIssuePage = () => {
   });
 
   const submitForm = handleSubmit(async (values: IssueForm) => {
-    // createIssue(values)
-    //   .then(() => {
-    //     setError("An Unexpected error occurred!");
-    //     setSuccess("Isuue created!");
-    // });
     setError("");
     setSuccess("");
 
