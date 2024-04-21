@@ -30,6 +30,7 @@ import "react-toastify/dist/ReactToastify.css";
 const LoginForm = () => {
   const notify = () => toast("Token has beeen sent to your email!");
   const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbaackUrl")
   const urlError =
     searchParams.get("error") === "OAuthAccountNotLinked"
       ? "Email already in use with different provider"
@@ -53,7 +54,7 @@ const LoginForm = () => {
     setSuccess("");
 
     startTransition(() => {
-      login(values)
+      login(values, callbackUrl)
         .then((data) => {
           if (data?.error) {
             form.reset();
