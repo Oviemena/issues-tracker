@@ -14,7 +14,7 @@ const NewVerificationForm = () => {
   const token = searchParams.get("token");
 
   const onSubmit = useCallback(() => {
-    if (success || error) return
+    if (success || error) return;
     if (!token) {
       setError("Missing token!");
       return;
@@ -35,14 +35,15 @@ const NewVerificationForm = () => {
 
   return (
     <CardWrapper
+      title="Email Confirmation"
       headerLabel="Confirming your email verification"
       backButtonLabel="Back to login"
       backButtonHref="/auth/login"
     >
       <div className="flex items-center justify-center w-full">
-        {!success && !error && (<BeatLoader />)}
+        {!success && !error && <BeatLoader />}
         <FormSuccess message={success} />
-        {!success && (<FormError message={error} />)}
+        {!success && <FormError message={error} />}
       </div>
     </CardWrapper>
   );

@@ -1,27 +1,11 @@
-import { signOut, auth } from "@/auth";
-import { Button } from "@radix-ui/themes";
+"use client";
+ 
+import { useCurrentUser } from "@/hooks/use-current-user";
 
-const DashboardPage = async () => {
-  const session = await auth();
 
-  return (
-    <>
-      <div>DashboardPage</div>
-      {JSON.stringify(session)}
-
-      <form
-        action={async () => {
-          "use server";
-
-          await signOut();
-        }}
-      >
-        <Button type="submit" variant="outline" color="red">
-          Sign out
-        </Button>
-      </form>
-    </>
-  );
+const DashboardPage = () => {
+  const user = useCurrentUser();
+  return <div>{JSON.stringify(user)}</div>;
 };
 
 export default DashboardPage;

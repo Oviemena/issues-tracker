@@ -1,9 +1,11 @@
+import { getTwoFactorConfirmationByUserId } from './data/two-factor-confirmation';
 import NextAuth from 'next-auth'
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import authConfig from '@/auth.config'
 import prisma from './prisma/client'
 import { getUserById } from './data/user'
 import { UserRole } from '@prisma/client'
+import { getAccountByUserId } from './data/account';
 
 
 export const {
@@ -29,10 +31,19 @@ export const {
         async signIn({ user, account }) {
             if (account?.provider !== "credentials") return true
 
-            const existingUser = await getUserById(user.id)
+            const existingUser = await getUserById(user.id || "")
             if (!existingUser?.emailVerified) return false
 
-            return true 
+            if (existingUser.isTwoFactorAuthEnabled) {
+                const twoFactorConfirmation = await getTwoFactorConfirmationByUserId(existingUser.id)
+
+                if (!twoFactorConfirmation) return false
+
+                await prisma.twoFactorConfirmation.delete({
+                    where: { id: twoFactorConfirmation.id }
+                })
+            }
+            return true
         },
         async session({ token, session }) {
             if (token.sub && session.user) {
@@ -42,13 +53,30 @@ export const {
                 session.user.role = token.role as UserRole
             }
 
+            if (session.user) {
+                session.user.isTwoFactorAuthEnabled = token.isTwoFactorAuthEnabled as boolean
+            }
+
+
+            if (session.user) {
+                session.user.name = token.name
+                session.user.email = token.email as string
+                session.user.isOAuth = token.isOAuth as boolean
+            }
             return session
         },
         async jwt({ token }) {
             if (!token.sub) return token
             const existingUser = await getUserById(token.sub)
             if (!existingUser) return token
+
+            const existingAccount = await getAccountByUserId(existingUser.id)
+            token.isOAuth = !!existingAccount
+            token.password = existingUser.password
+            token.name = existingUser.name
+            token.email = existingUser.email
             token.role = existingUser.role
+            token.isTwoFactorAuthEnabled = existingUser.isTwoFactorAuthEnabled
             return token
         }
     },
