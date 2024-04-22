@@ -1,28 +1,7 @@
-import { settings } from "@/actions/settings";
 import NameSettings from "@/components/auth/(settings)/name";
-import { FormError } from "@/components/form-error";
-import { FormSuccess } from "@/components/form-success";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Switch } from "@/components/ui/switch";
 import { useCurrentUser } from "@/hooks/use-current-user";
-import { SettingsSchema } from "@/schemas";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { IconButton } from "@radix-ui/themes";
-import { useSession } from "next-auth/react";
-import React, { useState, useTransition } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { AiFillEdit } from "react-icons/ai";
 import {
   Popover,
@@ -42,7 +21,7 @@ export function openNamePopUp() {
     <Popover>
       <PopoverTrigger asChild>
         <Button variant="link">
-          <AiFillEdit className="cursor-pointer" />
+          <AiFillEdit className="cursor-pointer" color="blue" />
         </Button>
       </PopoverTrigger>
       <PopoverContent>
@@ -57,7 +36,7 @@ export function openEmailPopUp() {
     <Popover>
       <PopoverTrigger asChild>
         <Button variant="link">
-          <AiFillEdit className="cursor-pointer" />
+          <AiFillEdit className="cursor-pointer" color="blue" />
         </Button>
       </PopoverTrigger>
       <PopoverContent>
@@ -72,7 +51,7 @@ export function openPasswordPopUp() {
     <Popover>
       <PopoverTrigger asChild>
         <Button variant="link">
-          <AiFillEdit className="cursor-pointer" />
+          <AiFillEdit className="cursor-pointer" color="blue" />
         </Button>
       </PopoverTrigger>
       <PopoverContent>
@@ -81,41 +60,23 @@ export function openPasswordPopUp() {
     </Popover>
   );
 }
+
+export function openTwoFactorAuthPopUp() {
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button variant="link">
+          <AiFillEdit className="cursor-pointer" color="blue" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent>
+        <TwoFactorSettings />
+      </PopoverContent>
+    </Popover>
+  );
+}
 const Settings = ({ label }: SettinsProps) => {
   const user = useCurrentUser();
-  const { update } = useSession();
-  const [isPending, startTransition] = useTransition();
-  const [success, setSuccess] = useState<string | undefined>();
-  const [error, setError] = useState<string | undefined>();
-
-  const form = useForm<z.infer<typeof SettingsSchema>>({
-    resolver: zodResolver(SettingsSchema),
-    defaultValues: {
-      name: user?.name || undefined,
-      email: user?.email || undefined,
-      password: undefined,
-      newPassword: undefined,
-      isTwoFactorAuthEnabled: user?.isTwoFactorAuthEnabled || undefined,
-    },
-  });
-
-  const onSubmit = (values: z.infer<typeof SettingsSchema>) => {
-    setError("");
-    setSuccess("");
-    startTransition(() => {
-      settings(values)
-        .then((data) => {
-          if (data.error) {
-            setError(data.error);
-          }
-          if (data.success) {
-            update();
-            setSuccess(data.success);
-          }
-        })
-        .catch(() => setError("Something went wrong!"));
-    });
-  };
 
   return (
     <Card>
@@ -124,18 +85,25 @@ const Settings = ({ label }: SettinsProps) => {
       </CardHeader>
       <CardContent>
         <div className="flex flex-row justify-between">
-          <p className="font-mono text-pretty">{user?.name}</p>
+          <p className="font-extralight text-pretty">Edit name</p>
           {openNamePopUp()}
         </div>
         <div className="flex flex-row justify-between">
-          <p className="font-mono text-pretty">{user?.email}</p>
-          {openEmailPopUp()}
+          <p className="font-extralight text-pretty">Edit email</p>
+          {user?.isOAuth === false && openEmailPopUp()}
         </div>
-        <div className="flex flex-row justify-between">
-          <p className="font-mono text-pretty">Edit password</p>
-          {openPasswordPopUp()}
-        </div>
-        <TwoFactorSettings />
+        {user?.isOAuth === false && (
+          <>
+            <div className="flex flex-row justify-between">
+              <p className="font-extralight text-pretty">Edit password</p>
+              {openPasswordPopUp()}
+            </div>
+            <div className="flex flex-row justify-between">
+              <p className="font-extralight text-pretty">Enable 2FA</p>
+              {openTwoFactorAuthPopUp()}
+            </div>
+          </>
+        )}
       </CardContent>
     </Card>
   );

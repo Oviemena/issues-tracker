@@ -1,4 +1,4 @@
-import { settings } from "@/actions/settings";
+import { email } from "@/actions/email";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
 import { Button } from "@/components/ui/button";
@@ -37,7 +37,7 @@ const EmailSettings = () => {
     setError("");
     setSuccess("");
     startTransition(() => {
-      settings(values)
+      email(values)
         .then((data) => {
           if (data.error) {
             setError(data.error);

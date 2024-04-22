@@ -1,4 +1,5 @@
-import { settings } from "@/actions/settings";
+import { TwoFactor } from "@/actions/2fa";
+import { settings } from "@/actions/name";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
 import { Button } from "@/components/ui/button";
@@ -39,7 +40,7 @@ const TwoFactorSettings = () => {
     setError("");
     setSuccess("");
     startTransition(() => {
-      settings(values)
+      TwoFactor(values)
         .then((data) => {
           if (data.error) {
             setError(data.error);
@@ -82,7 +83,18 @@ const TwoFactorSettings = () => {
           )}
         </div>
         <FormError message={error} />
-        <FormSuccess message={success} />
+        <FormSuccess
+          message={success}
+        />
+        <Button
+          type="submit"
+          className="cursor-pointer text-green-600"
+          variant="secondary"
+          size="sm"
+          disabled={isPending}
+        >
+          Save Changes
+        </Button>
       </form>
     </Form>
   );
