@@ -59,7 +59,7 @@ export const password = async (
         }
 
         const hashedPassword = await bcrypt.hash(
-            values.password, 10
+            values.newPassword, 10
         )
 
         values.password = hashedPassword
@@ -73,7 +73,6 @@ export const password = async (
         where: { id: isUserInDb.id },
         data: {
             ...values,
-            password: values.password
 
         }
     })
