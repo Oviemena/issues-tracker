@@ -74,9 +74,10 @@ export const settings = async (
         where: { id: isUserInDb.id },
         data: {
             ...values,
+            name: values.name
         }
     })
 
-    return { success: "Settings updated!" }
+    return { success: "Name updated!" }
 
 } 

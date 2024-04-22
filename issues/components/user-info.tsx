@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import Settings from "@/app/(protected)/_components/settings";
+import { Table, TableBody, TableCell, TableFooter, TableRow } from "./ui/table";
 
 interface UserInfoProps {
   user?: ExtendedUser;
@@ -19,7 +20,7 @@ export const UserInfo = ({ user, label }: UserInfoProps) => {
         <TabsTrigger value="settings">Settings</TabsTrigger>
       </TabsList>
       <TabsContent value="account">
-        <Card>
+        {/* <Card className="space-y-2">
           <CardHeader>
             <p className="text-2xl font-semibold text-center">{label}</p>
           </CardHeader>
@@ -49,10 +50,54 @@ export const UserInfo = ({ user, label }: UserInfoProps) => {
               </Badge>
             </div>
           </CardContent>
-        </Card>
+        </Card> */}
+        <Table className="space-y-2">
+          <TableBody>
+            <TableRow>
+              <TableCell className="space-y-2">
+                <div className="flex flex-row items-center justify-between rounded-lg border p-3 ">
+                  <p className="text-sm font-medium">Name</p>
+                  <p className="truncate text-xs max-w-[180px] font-mono p-1 rounded-md ml-4">
+                    {user?.name}
+                  </p>
+                </div>
+              </TableCell>
+            </TableRow>
+          </TableBody>
+          <TableBody>
+            <TableRow>
+              <TableCell>
+                <div className="flex flex-row items-center justify-between rounded-lg border p-3">
+                  <p className="text-sm font-medium">Email</p>
+                  <p className="truncate text-xs max-w-[180px] font-mono p-1 rounded-md ml-4">
+                    {user?.email}
+                  </p>
+                </div>
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>
+                <div className="flex flex-row items-center justify-between rounded-lg border p-3">
+                  <p className="text-sm font-medium">
+                    Two Factor Authentication
+                  </p>
+
+                  <Badge
+                    className="ml-4"
+                    variant={
+                      user?.isTwoFactorAuthEnabled ? "success" : "destructive"
+                    }
+                  >
+                    {user?.isTwoFactorAuthEnabled ? "ON" : "OFF"}
+                  </Badge>
+                </div>
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
       </TabsContent>
       <TabsContent value="settings">
-        <Settings label="Settings"/>
+        <Settings label="Settings" />
       </TabsContent>
     </Tabs>
   );
