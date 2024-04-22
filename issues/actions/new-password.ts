@@ -10,7 +10,7 @@ import prisma from '@/prisma/client';
 
 export const newPassword = async (
     values: z.infer<typeof NewPasswordSchema>,
-    token?: string | null ) => {
+    token?: string | null) => {
     if (!token) {
         return { error: "Missing token!" }
     }
@@ -30,8 +30,8 @@ export const newPassword = async (
 
     const isExpired = new Date(existingToken.expires) < new Date()
 
-    if (!isExpired) {
-        return { errror: 'Token has expired!' }
+    if (isExpired) {
+        return { error: 'Token has expired!' }
     }
 
     const existingUser = await getUserByEmail(existingToken.email)

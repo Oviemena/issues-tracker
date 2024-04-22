@@ -1,12 +1,14 @@
 "use server"
 import bcrypt from 'bcryptjs';
 
-import { getUserById } from "@/data/user"
+import { getUserById, getUserByEmail } from "@/data/user"
 
 import { currentUser } from "@/lib/use-current-user"
 import prisma from "@/prisma/client"
 import { SettingsSchema } from "@/schemas"
 import * as z from "zod"
+import { sendVerificationEmail } from '@/lib/mail';
+import { generateVerificationToken } from '@/lib/token';
 
 export const password = async (
     values: z.infer<typeof SettingsSchema>
@@ -29,11 +31,27 @@ export const password = async (
     }
 
 
+    if (values.email && values.email !== user.email) {
+        const existingUser = await getUserByEmail(values.email)
+        if (existingUser && existingUser.id !== user.id) {
+            return { error: "Email already in use!" }
+        }
+
+        const verificationToken = await generateVerificationToken(
+            values.email
+        )
+        await sendVerificationEmail(
+            verificationToken.email,
+            verificationToken.token
+        )
+
+        return { success: "verification email sent!" }
+    }
 
     if (values.password && values.newPassword && isUserInDb.password) {
         const doesPasswordMatch = await bcrypt.compare(
             values.password,
-            values.newPassword
+            isUserInDb.password
         )
 
         if (!doesPasswordMatch) {
@@ -55,7 +73,7 @@ export const password = async (
         where: { id: isUserInDb.id },
         data: {
             ...values,
-            password: values.password,
+            password: values.password
 
         }
     })

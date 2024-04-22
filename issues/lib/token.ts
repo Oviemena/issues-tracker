@@ -35,6 +35,7 @@ export const generatePasswordResetToken = async (email: string) => {
     const token = uuidv4()
     const expires = new Date(new Date().getTime() + 3600 * 1000)
 
+    console.log(expires)
     const existingToken = await getPasswordResetTokenByEmail(email)
     if (existingToken) {
         await prisma.passwordResetToken.delete({
