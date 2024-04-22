@@ -1,8 +1,5 @@
 import { TwoFactor } from "@/actions/2fa";
-import { settings } from "@/actions/name";
 import { FormError } from "@/components/form-error";
-import { FormSuccess } from "@/components/form-success";
-import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -17,6 +14,10 @@ import { Switch } from "@/components/ui/switch";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { SettingsSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  CheckCircledIcon,
+  ExclamationTriangleIcon,
+} from "@radix-ui/react-icons";
 import { useSession } from "next-auth/react";
 import React, { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
@@ -36,26 +37,26 @@ const TwoFactorSettings = () => {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof SettingsSchema>) => {
+  const handleSwitchChange = (value: boolean) => {
     setError("");
     setSuccess("");
     startTransition(() => {
-      TwoFactor(values)
+      TwoFactor({ isTwoFactorAuthEnabled: value })
         .then((data) => {
           if (data.error) {
             setError(data.error);
           }
           if (data.success) {
             update();
-            setSuccess(data.success);
           }
         })
         .catch(() => setError("Something went wrong!"));
     });
   };
+
   return (
     <Form {...form}>
-      <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
+      <form className="space-y-6">
         <div className="space-y-4">
           {user?.isOAuth === false && (
             <FormField
@@ -72,10 +73,27 @@ const TwoFactorSettings = () => {
                       <Switch
                         disabled={isPending}
                         checked={field.value}
-                        onCheckedChange={field.onChange}
+                        onCheckedChange={(checked) => {
+                          field.onChange(checked);
+                          handleSwitchChange(checked);
+                        }}
                       ></Switch>
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage>
+                      {success ||
+                        (field.value ? (
+                          <div className="bg-emerald-500/15 p-3 rounded-md flex items-center gap-x-2 text-sm text-emerald-500">
+                            <CheckCircledIcon className="h-4 w-4" />
+
+                            <p>Two Factor Authentication enabled!</p>
+                          </div>
+                        ) : (
+                          <div className="bg-destructive/15 p-3 rounded-md flex items-center gap-x-2 text-sm text-destructive">
+                            <ExclamationTriangleIcon className="h-4 w-4" />
+                            <p>Two Factor Authentication disabled!</p>
+                          </div>
+                        ))}
+                    </FormMessage>
                   </div>
                 </FormItem>
               )}
@@ -83,18 +101,6 @@ const TwoFactorSettings = () => {
           )}
         </div>
         <FormError message={error} />
-        <FormSuccess
-          message={success}
-        />
-        <Button
-          type="submit"
-          className="cursor-pointer text-green-600"
-          variant="secondary"
-          size="sm"
-          disabled={isPending}
-        >
-          Save Changes
-        </Button>
       </form>
     </Form>
   );

@@ -99,8 +99,9 @@ const Settings = ({ label }: SettinsProps) => {
               {openPasswordPopUp()}
             </div>
             <div className="flex flex-row justify-between">
-              <p className="font-extralight text-pretty">Enable 2FA</p>
-              {openTwoFactorAuthPopUp()}
+              <div className="flex flex-col">
+                <TwoFactorSettings />
+              </div>
             </div>
           </>
         )}
