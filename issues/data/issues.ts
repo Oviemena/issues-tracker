@@ -1,4 +1,5 @@
 export const dynamic = 'force-dynamic'
+
 import { prisma } from "@/prisma/client"
 import { Status } from "@prisma/client"
 

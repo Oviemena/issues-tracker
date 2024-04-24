@@ -1,13 +1,13 @@
 import { IssuesWrapper } from "@/components/auth/issues-wrapper";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
-import { getAllIssues } from "@/data/issues";
+import { getAllIssues, getAllIssuesByStatus } from "@/data/issues";
 import Image from "next/image";
 import { FaUser } from "react-icons/fa";
 import { CaretDownIcon } from "@radix-ui/react-icons";
 
 const CompletedIssues = async () => {
-  const issues = await getAllIssues();
+  const issues = await getAllIssuesByStatus("COMPLETED");
   return (
     <div className="w-[400px] space-y-2">
       <div className="font-semibold text-2xl bg-green-600 items-center  justify-between p-4 flex flex-row">

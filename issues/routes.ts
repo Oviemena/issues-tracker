@@ -1,3 +1,5 @@
+// export const dynamic = 'force-dynamic'
+
 /**
  *  An array of routes that are accessible to the public
  * Thses routes do not require authentication

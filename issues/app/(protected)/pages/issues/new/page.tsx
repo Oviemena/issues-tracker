@@ -54,6 +54,7 @@ const NewIssuePage = () => {
   const onSubmit = (values: IssueForm) => {
     setError("");
     setSuccess("");
+    console.log("Field value:", values);
 
     startTransition(() => {
       createIssue(values)
@@ -114,7 +115,7 @@ const NewIssuePage = () => {
                 <FormItem>
                   <FormLabel>Description</FormLabel>
                   <FormControl>
-                    <SimpleMDE placeholder="Description..." />
+                    <SimpleMDE placeholder="Description..." {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -150,7 +151,7 @@ const NewIssuePage = () => {
               )}
             />
           </div>
-          <Button variant="ghost" type="submit">
+          <Button variant="primary" type="submit">
             {isPending ? (
               <>
                 <div className="flex flex-row space-x-2">
