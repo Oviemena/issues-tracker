@@ -1,11 +1,15 @@
-"use client";
- 
-import { useCurrentUser } from "@/hooks/use-current-user";
-
+import CompletedIssues from "../../_components/completed-issues";
+import InProgressIssues from "../../_components/in-progress-issue";
+import OpenIssues from "../../_components/open-issues";
 
 const DashboardPage = () => {
-  const user = useCurrentUser();
-  return <div>{JSON.stringify(user)}</div>;
+  return (
+    <div className="flex flex-row space-x-10 items-center justify-center">
+      <OpenIssues />
+      <InProgressIssues />
+      <CompletedIssues />
+    </div>
+  );
 };
 
 export default DashboardPage;

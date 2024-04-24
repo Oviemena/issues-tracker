@@ -2,7 +2,6 @@
 
 
 import * as z from 'zod'
-// import argon2 from 'argon2'
 import bcrypt from "bcryptjs"
 import prisma from '@/prisma/client'
 

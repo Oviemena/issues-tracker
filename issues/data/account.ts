@@ -1,5 +1,4 @@
 import prisma from "@/prisma/client";
-import { devNull } from "os";
 
 export const getAccountByUserId = async (userId: string) => {
     try {
