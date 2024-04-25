@@ -10,6 +10,7 @@ export const ErrorCard = () => {
         headerLabel="Oops!😫 Something went wrong!"
         backButtonHref="/auth/login"
         backButtonLabel="Back to login"
+        title="404 Page"
     >
         <div className="w-full flex justify-center items-center">
             <ExclamationTriangleIcon className="text-destructive text-3xl"/>

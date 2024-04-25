@@ -50,7 +50,7 @@ export const settings = async (
 
 
     if (values.password && values.newPassword && isUserInDb.password) {
-        const doesPasswordMatch = await bcrypt.comapre(
+        const doesPasswordMatch = await bcrypt.compare(
             values.password,
             values.newPassword
         )
