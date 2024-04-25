@@ -31,3 +31,33 @@ export const getAllIssuesByStatus = async (status: Status) => {
         return null
     }
 }
+
+export const deleteIssueById = async (id: number) => {
+    try {
+        const deletedIssue = await prisma.issue.delete({
+            where: {
+                id: id
+            },
+        });
+
+        return deletedIssue;
+    } catch (error) {
+        return error
+    }
+}
+
+export const deleteIssuesByIds = async (id: number[]) => {
+    try {
+        const deletedIssues = await prisma.issue.deleteMany({
+            where: {
+                id: {
+                    in: id
+                }
+            },
+        });
+
+        return deletedIssues;
+    } catch (error) {
+        return null
+    }
+}

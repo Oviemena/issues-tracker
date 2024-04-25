@@ -30,7 +30,7 @@ export default async function RootLayout({
     <SessionProvider session={session}>
       <html lang="en">
         <body className={classnames(inter.variable,)}>
-          <Theme accentColor="tomato" radius="large" appearance="dark">
+          <Theme accentColor="blue" radius="large" appearance="dark">
             <main className="p-5">{children}</main>
           </Theme>
         </body>

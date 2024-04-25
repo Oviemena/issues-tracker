@@ -1,8 +1,8 @@
 export const revalidate = 1;
 
-import CompletedIssues from "../../_components/completed-issues";
-import InProgressIssues from "../../_components/in-progress-issue";
-import OpenIssues from "../../_components/open-issues";
+import CompletedIssues from "./completed-issues";
+import InProgressIssues from "./in-progress-issue";
+import OpenIssues from "./open-issues";
 
 const DashboardPage = () => {
   return (
